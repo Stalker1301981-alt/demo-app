@@ -1,0 +1,19 @@
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') {
+            steps { checkout scm }
+        }
+        stage('Build & Push') {
+            steps {
+                sh "docker build -t stalker1301981/demo-app:latest ."
+                sh "docker push stalker1301981/demo-app:latest"
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh "kubectl apply -f k8s/"
+            }
+        }
+    }
+}
