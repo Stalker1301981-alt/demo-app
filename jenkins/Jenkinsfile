@@ -1,22 +1,28 @@
 ﻿pipeline {
     agent any
     environment {
-        DOCKER_HUB_CREDS = credentials('docker-hub')
+        DOCKER_HUB = credentials('docker-hub')
+        GIT_CREDS = credentials('github-token')
+        IMAGE = "art201090/demo-app:build-${BUILD_NUMBER}"
+        PATH = "/var/jenkins_home:/usr/local/bin:/usr/bin:/bin"
     }
     stages {
-        stage('Checkout') {
-            steps { checkout scm }
-        }
         stage('Build & Push') {
             steps {
-                sh "docker build -t art201090/demo-app:latest ."
-                sh "echo $DOCKER_HUB_CREDS_PSW | docker login -u $DOCKER_HUB_CREDS_USR --password-stdin"
+                sh "docker build -t ${IMAGE} ."
+                sh "docker tag ${IMAGE} art201090/demo-app:latest"
+                sh "echo ${DOCKER_HUB_PSW} | docker login -u ${DOCKER_HUB_USR} --password-stdin"
+                sh "docker push ${IMAGE}"
                 sh "docker push art201090/demo-app:latest"
             }
         }
-        stage('Deploy') {
+        stage('Update Repo') {
             steps {
-                sh "kubectl set image deployment/demo-app app=art201090/demo-app:latest -n demo"
+                sh "sed -i 's|image:.*|image: ${IMAGE}|' k8s/deployment.yaml"
+                sh "git config user.name jenkins && git config user.email jenkins@demo.com"
+                sh "git add k8s/deployment.yaml"
+                sh "git commit -m 'Update image to ${BUILD_NUMBER}'"
+                sh "git push https://\${GIT_CREDS_USR}:\${GIT_CREDS_PSW}@github.com/Stalker1301981-alt/demo-app.git HEAD:main"
             }
         }
     }
