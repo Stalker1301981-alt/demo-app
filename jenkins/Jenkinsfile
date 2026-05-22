@@ -1,18 +1,22 @@
-pipeline {
+﻿pipeline {
     agent any
+    environment {
+        DOCKER_HUB_CREDS = credentials('docker-hub')
+    }
     stages {
         stage('Checkout') {
             steps { checkout scm }
         }
         stage('Build & Push') {
             steps {
-                sh "docker build -t stalker1301981/demo-app:latest ."
-                sh "docker push stalker1301981/demo-app:latest"
+                sh "docker build -t art201090/demo-app:latest ."
+                sh "echo \$DOCKER_HUB_CREDS_PSW | docker login -u \$DOCKER_HUB_CREDS_USR --password-stdin"
+                sh "docker push art201090/demo-app:latest"
             }
         }
         stage('Deploy') {
             steps {
-                sh "kubectl apply -f k8s/"
+                sh "kubectl set image deployment/demo-app app=art201090/demo-app:latest -n demo"
             }
         }
     }
