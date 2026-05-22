@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'built-in' }
     environment {
         DOCKER_HUB = credentials('docker-hub')
         GIT_CREDS = credentials('github-token')
