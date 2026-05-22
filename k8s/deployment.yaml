@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
       - name: app
-        image: art201090/demo-app:build-8
+        image: art201090/demo-app:build-9
         ports:
         - containerPort: 8080
