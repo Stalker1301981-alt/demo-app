@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
       - name: app
-        image: stalker1301981/demo-app:latest
+        image: art201090/demo-app:latest
         ports:
         - containerPort: 8080
