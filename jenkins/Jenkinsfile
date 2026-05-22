@@ -10,7 +10,7 @@
         stage('Build & Push') {
             steps {
                 sh "docker build -t art201090/demo-app:latest ."
-                sh "echo \$DOCKER_HUB_CREDS_PSW | docker login -u \$DOCKER_HUB_CREDS_USR --password-stdin"
+                sh "echo $DOCKER_HUB_CREDS_PSW | docker login -u $DOCKER_HUB_CREDS_USR --password-stdin"
                 sh "docker push art201090/demo-app:latest"
             }
         }
