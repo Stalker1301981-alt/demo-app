@@ -1,4 +1,5 @@
 pipeline {
+    triggers { pollSCM('* * * * *') }
     agent { label 'built-in' }
     environment {
         DOCKER_HUB = credentials('docker-hub')
@@ -17,6 +18,11 @@ pipeline {
             }
         }
         stage('Update Repo') {
+            when {
+                expression {
+                    sh(script: "git log -1 --format='%an'", returnStdout: true).trim() != 'jenkins'
+                }
+            }
             steps {
                 sh "sed -i 's|tag:.*|tag: build-${BUILD_NUMBER}|' helm/demo-app/values.yaml"
                 sh "git config user.name jenkins && git config user.email jenkins@demo.com"
