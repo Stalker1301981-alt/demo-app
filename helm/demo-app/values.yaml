@@ -7,3 +7,16 @@ service:
   type: NodePort
   port: 8080
   nodePort: 30082
+
+hpa:
+  minReplicas: 2
+  maxReplicas: 5
+  cpuTarget: 50
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
