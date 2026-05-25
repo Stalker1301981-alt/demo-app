@@ -1,0 +1,9 @@
+replicas: 2
+namespace: demo
+image:
+  repository: art201090/demo-app
+  tag: build-10
+service:
+  type: NodePort
+  port: 8080
+  nodePort: 30082

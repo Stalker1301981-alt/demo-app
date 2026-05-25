@@ -18,9 +18,9 @@ pipeline {
         }
         stage('Update Repo') {
             steps {
-                sh "sed -i 's|image:.*|image: ${IMAGE}|' k8s/deployment.yaml"
+                sh "sed -i 's|tag:.*|tag: build-${BUILD_NUMBER}|' helm/demo-app/values.yaml"
                 sh "git config user.name jenkins && git config user.email jenkins@demo.com"
-                sh "git add k8s/deployment.yaml"
+                sh "git add helm/demo-app/values.yaml"
                 sh "git commit -m 'Update image to ${BUILD_NUMBER}'"
                 sh "git push https://\${GIT_CREDS_USR}:\${GIT_CREDS_PSW}@github.com/Stalker1301981-alt/demo-app.git HEAD:main"
             }
