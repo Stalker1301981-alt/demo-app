@@ -2,7 +2,7 @@ replicas: 2
 namespace: demo
 image:
   repository: art201090/demo-app
-  tag: build-16
+  tag: build-18
 service:
   type: NodePort
   port: 8080
